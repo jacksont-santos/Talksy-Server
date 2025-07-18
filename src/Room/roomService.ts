@@ -1,4 +1,4 @@
-import { roomModel } from "../database/models";
+import { roomModel, chatModel } from "../database/models";
 import { httpResponse } from "../utils/response";
 import { hashPassword } from "../utils/crypto";
 import { WSService } from "../ws/wsService";
@@ -62,6 +62,7 @@ export class RoomService {
     const message = {
       notification: true,
       type: 'addRoom',
+      userId: ownerId,
       data: {...room, roomId: room._id}
     };
     const {success} = await wsService.sendMessage(message);
@@ -99,6 +100,7 @@ export class RoomService {
     const message = {
       notification: true,
       type: 'updateRoom',
+      userId,
       data: {...room, roomId: room._id}
     };
     const {success} = await wsService.sendMessage(message);
@@ -122,6 +124,7 @@ export class RoomService {
     const message = {
       notification: true,
       type: 'removeRoom',
+      userId,
       data: { roomId, public: response.public  },
     };
 
@@ -129,7 +132,23 @@ export class RoomService {
     return {
       statusCode: 200,
       message: success ? 'Room deleted successfully' : 'Communication failed',
-      data: { roomId }
+      data: { _id: roomId }
     };
+  }
+
+  async getRoomMessages(roomId: string, page: number = 1, limit: number = 10): Promise<httpResponse> {
+    const room = await roomModel.exists({ _id: roomId });
+    if (!room) return {statusCode: 404, message: "Room not found"};
+    const skip = (page - 1) * limit;
+    const query = [
+      { $match: { roomId } },
+      { $unwind: "$chat" },
+      { $project: { _id: 0, chat: 1, createdAt: 1 } },
+      // { $sort: { createdAt: -1 } },
+      { $skip: skip },
+      { $limit: limit },
+    ];
+    const messages = await chatModel.aggregate(query);
+    return {statusCode: 200, data:  messages?.length ? messages : []};
   }
 }

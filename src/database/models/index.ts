@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import { randomUUID } from 'crypto';
 
 const userSchema = new mongoose.Schema({
-  _id: { type: String, default: () => randomUUID(), unique: true },
+  _id: { type: String },
   username: { type: String, unique: true, required: true, validate: (value) => value.length >= 4 && value.length <= 16 },
   password: { type: String, required: true, validate: (value) => value.length > 30 },
 });
@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
 const userModel = mongoose.model('user', userSchema);
 
 const roomSchema = new mongoose.Schema({
-  _id: { type: String, default: () => randomUUID(), unique: true },
+  _id: { type: String },
   ownerId: { type: String, required: true },
   name: { type: String, required: true, validate: (value) => value.length >= 4 && value.length <= 30 },
   maxUsers: { type: Number, required: true, validate: (value) => value >= 2 && value <= 10 },
@@ -23,7 +23,22 @@ const roomSchema = new mongoose.Schema({
 
 const roomModel = mongoose.model('room', roomSchema);
 
-export { userModel, roomModel, userSchema, roomSchema }
+type Chat = {
+  nickname: string;
+  content: string;
+  createdAt: Date;
+}
+
+const chatSchema = new mongoose.Schema({
+  _id: { type: String },
+  roomId: { type: String, required: true },
+  chat: { type: Array<Chat>, default: [], required: true },
+  createdAt: { type: Date, default: new Date(), required: true },
+  updatedAt: { type: Date, default: new Date(), required: true },
+});
+const chatModel = mongoose.model('chat', chatSchema);
+
+export { userModel, roomModel, chatModel }
 
 export interface User {
   _id: string;

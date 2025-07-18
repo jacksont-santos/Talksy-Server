@@ -8,22 +8,27 @@ interface rawMessage {
 
 export class WSService {
   private socket: WebSocket;
-    // private wss = new WebSocketServer({});
 
   constructor() {
-    console.log("WSService constructor")
+    this.connect();
+  }
+
+  private connect() {
+    console.log("WSService connect");
     this.socket = new WebSocket(process.env.CHATSERVER_URL);
 
     this.socket.addEventListener("open", (event) => {
       console.log("WebSocket connection established!");
     });
-
     this.socket.addEventListener("close", (event) => {
-      console.log("WebSocket connection closed:", event.code, event.reason);
+      console.log("WebSocket connection closed");
+      this.socket = null;
+      setTimeout(() => {
+        this.connect();
+      }, 5000);
     });
-
     this.socket.addEventListener("error", (error) => {
-      console.error("WebSocket error:", error);
+      console.error("WebSocket error:", error.error);
     });
   }
 

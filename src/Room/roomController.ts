@@ -85,4 +85,14 @@ router.delete("/delete/:Id", authMiddleware, async (req: Request, res: Response)
     .json({ message: response.message });
 });
 
+router.get("/messages/:id", async (req: Request, res: Response) => {
+  const { id: roomId } = req.params;
+  const { page, limit } = req.query;
+  const response = await roomService.getRoomMessages(roomId, Number(page), Number(limit));
+
+  res
+    .status(response.statusCode)
+    .json({ message: response.message, data: response.data });
+});
+
 export default router;
