@@ -22,7 +22,7 @@ export class AuthService {
     const result = comparePasswords(password, user.password);
     if (!result) return {statusCode: 401, message: "Invalid username or password"};
 
-    const token = signJWT({ username, _id: user._id});
+    const token = signJWT({ username, _id: user._id, date: new Date() });
     if (!token) return {statusCode: 500, message: "Internal server error"};
 
     return {

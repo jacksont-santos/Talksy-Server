@@ -55,7 +55,7 @@ export class RoomService {
       public: !!isPublic,
       password: password ? await hashPassword(password) : undefined,
     };
-    const room = await roomModel.create(newRoomData);
+    const room = (await roomModel.create(newRoomData)).toObject();
     if (!room) return {statusCode: 500, message: "Internal server error"}
 
     if (room.password) delete room.password;
@@ -81,33 +81,35 @@ export class RoomService {
     const room = await roomModel.findOne({ _id: roomId, ownerId: userId });
     if (!room) return {statusCode: 404, message: "Room not found"};
 
+    if (room.ownerId != userId)
+      return {statusCode: 401, message: "Unauthorized"};
+
     if (!name && !maxUsers && !isPublic && !password)
       return {statusCode: 400, message: "Missing required fields"};
 
-    if (!isPublic && !password)
+    if (!isPublic && !password && !room.password)
       return {statusCode: 400, message: "Password is required for private rooms"};
 
     room.name = name || room.name;
     room.maxUsers = maxUsers || room.maxUsers;
     room.public = isPublic || room.public;
     room.active = active || room.active;
-    room.password = isPublic ? password : undefined;
+    room.password = isPublic ? undefined : password ? await hashPassword(password) : room.password;
 
-    const updatedRoom = await room.updateOne();
-    if (!updatedRoom.modifiedCount) return {statusCode: 500, message: "Internal server error"};
+    const updatedRoom = (await room.save()).toObject();
 
-    if (room.password) delete room.password;
+    if (updatedRoom.password) delete updatedRoom.password;
     const message = {
       notification: true,
       type: 'updateRoom',
       userId,
-      data: {...room, roomId: room._id}
+      data: {...updatedRoom, roomId: room._id}
     };
     const {success} = await wsService.sendMessage(message);
     return {
       statusCode: 200,
       message: success ? 'Room updated successfully' : 'Communication failed',
-      data: room
+      data: updatedRoom
     };
   }
 
@@ -125,7 +127,7 @@ export class RoomService {
       notification: true,
       type: 'removeRoom',
       userId,
-      data: { roomId, public: response.public  },
+      data: { _id: roomId, public: response.public  },
     };
 
     const {success} = await wsService.sendMessage(message);
@@ -140,15 +142,14 @@ export class RoomService {
     const room = await roomModel.exists({ _id: roomId });
     if (!room) return {statusCode: 404, message: "Room not found"};
     const skip = (page - 1) * limit;
-    const query = [
+    const messages = await chatModel.aggregate([
       { $match: { roomId } },
-      { $unwind: "$chat" },
-      { $project: { _id: 0, chat: 1, createdAt: 1 } },
-      // { $sort: { createdAt: -1 } },
-      { $skip: skip },
-      { $limit: limit },
-    ];
-    const messages = await chatModel.aggregate(query);
-    return {statusCode: 200, data:  messages?.length ? messages : []};
+      { $project: {
+        _id: 0,
+        chat: {$slice: [ '$chat', skip, limit ] }
+      }}
+    ]);
+    const data = messages.length ? messages[0].chat.reverse() : [];
+    return {statusCode: 200, data};
   }
 }
