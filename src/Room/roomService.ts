@@ -127,7 +127,7 @@ export class RoomService {
       notification: true,
       type: 'removeRoom',
       userId,
-      data: { _id: roomId, public: response.public  },
+      data: { roomId, public: response.public  },
     };
 
     const {success} = await wsService.sendMessage(message);

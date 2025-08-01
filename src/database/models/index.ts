@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
 const userModel = mongoose.model('user', userSchema);
 
 const roomSchema = new mongoose.Schema({
-  _id: { type: String },
+  _id: { type: String, default: () => randomUUID() },
   ownerId: { type: String, required: true },
   name: { type: String, required: true, validate: (value) => value.length >= 4 && value.length <= 30 },
   maxUsers: { type: Number, required: true, validate: (value) => value >= 2 && value <= 10 },
