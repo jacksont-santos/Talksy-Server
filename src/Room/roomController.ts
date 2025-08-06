@@ -33,10 +33,9 @@ router.get("/private", authMiddleware, async (req: Request, res: Response) => {
     .json({ message: response.message, data: response.data });
 });
 
-router.get("/private/:id", authMiddleware, async (req: Request, res: Response) => {
+router.get("/private/:id", async (req: Request, res: Response) => {
   const roomId = req.params.id;
-  const userId = (<any>req.headers).userData._id;
-  const response = await roomService.getPrivateRoomById(roomId, userId);
+  const response = await roomService.getPrivateRoomById(roomId);
 
   res
     .status(response.statusCode)

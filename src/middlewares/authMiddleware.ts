@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../utils/jwt';
 import { AppError } from '../utils/appError';
-// import { User } from '../database/models';
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const authorization = req.headers.authorization;

@@ -17,8 +17,7 @@ export class RoomService {
 
   async getPublicRooms(): Promise<httpResponse> {
     const rooms = await roomModel.find({ public: true }, { password: 0 });
-    if (!rooms.length) return {statusCode: 404}
-    return {statusCode: 200, data: rooms};
+    return {statusCode: 200, data: rooms.length ? rooms : []};
   }
 
   async getRoomById(roomId: string): Promise<httpResponse> {
@@ -29,12 +28,11 @@ export class RoomService {
 
   async getPrivateRooms(ownerId: string): Promise<httpResponse> {
     const privateRooms = await roomModel.find({ ownerId, public: false }, { password: 0 });
-    if (!privateRooms.length) return {statusCode: 404}
-    return {statusCode: 200, data: privateRooms};
+    return {statusCode: 200, data: privateRooms.length ? privateRooms : []};
   }
 
-  async getPrivateRoomById(roomId: string, ownerId: string): Promise<httpResponse> {
-    const privateRoom = await roomModel.findOne({ _id: roomId, ownerId }, { password: 0 });
+  async getPrivateRoomById(roomId: string): Promise<httpResponse> {
+    const privateRoom = await roomModel.findOne({ _id: roomId }, { password: 0 });
     if (!privateRoom) return {statusCode: 404}
     return {statusCode: 200, data: privateRoom};
   }
