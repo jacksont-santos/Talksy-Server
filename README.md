@@ -1,4 +1,4 @@
-# Chat Room & User Service
+# Talksy-Server
 
 Microserviço responsável pela **criação, gerenciamento e autenticação de usuários e salas de chat**.  
 Ele fornece **APIs REST** para controle de usuários e salas e integra-se ao servidor WebSocket para envio de notificações em tempo real sobre criação, atualização e remoção de salas.
