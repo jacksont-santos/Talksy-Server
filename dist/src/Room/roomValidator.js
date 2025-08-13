@@ -4,7 +4,7 @@ exports.validateRoomDTO = void 0;
 var zod_1 = require("zod");
 var appError_1 = require("../utils/appError");
 var createRoomDTO = zod_1.z.object({
-    name: zod_1.z.string().min(4, "too short").max(20, "too long"),
+    name: zod_1.z.string().min(4, "too short").max(30, "too long"),
     password: zod_1.z.string().min(6, "too short").max(16, "too long").optional(),
     maxUsers: zod_1.z
         .number()
@@ -14,7 +14,7 @@ var createRoomDTO = zod_1.z.object({
     isPublic: zod_1.z.boolean().optional(),
 });
 var updateRoomDTO = zod_1.z.object({
-    name: zod_1.z.string().min(4, "too short").max(20, "too long").optional(),
+    name: zod_1.z.string().min(4, "too short").max(30, "too long").optional(),
     password: zod_1.z.string().min(6, "too short").max(16, "too long").optional(),
     maxUsers: zod_1.z
         .number()
@@ -23,7 +23,7 @@ var updateRoomDTO = zod_1.z.object({
         .max(10, "Invalid users number")
         .optional(),
     active: zod_1.z.boolean().optional(),
-    public: zod_1.z.boolean().optional(),
+    isPublic: zod_1.z.boolean().optional(),
 });
 var validateRoomDTO = function (req, res, next) {
     var DTO = req.method == 'POST' ? createRoomDTO :
