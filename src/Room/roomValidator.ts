@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { AppError } from '../utils/appError';
 
 const createRoomDTO: ZodSchema = z.object({
-  name: z.string().min(4, "too short").max(20, "too long"),
+  name: z.string().min(4, "too short").max(30, "too long"),
   password: z.string().min(6, "too short").max(16, "too long").optional(),
   maxUsers: z
     .number()
@@ -14,7 +14,7 @@ const createRoomDTO: ZodSchema = z.object({
 });
 
 const updateRoomDTO: ZodSchema = z.object({
-  name: z.string().min(4, "too short").max(20, "too long").optional(),
+  name: z.string().min(4, "too short").max(30, "too long").optional(),
   password: z.string().min(6, "too short").max(16, "too long").optional(),
   maxUsers: z
     .number()
@@ -23,7 +23,7 @@ const updateRoomDTO: ZodSchema = z.object({
     .max(10, "Invalid users number")
     .optional(),
   active: z.boolean().optional(),
-  public: z.boolean().optional(),
+  isPublic: z.boolean().optional(),
 });
 
 export const validateRoomDTO = (
