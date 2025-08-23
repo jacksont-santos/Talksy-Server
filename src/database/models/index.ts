@@ -2,7 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import { randomUUID } from 'crypto';
 
 const userSchema = new mongoose.Schema({
-  _id: { type: String },
+  _id: { type: String,  default: () => randomUUID() },
   username: { type: String, unique: true, required: true, validate: (value) => value.length >= 4 && value.length <= 16 },
   password: { type: String, required: true, validate: (value) => value.length > 30 },
 });

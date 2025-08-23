@@ -7,7 +7,7 @@ exports.chatModel = exports.roomModel = exports.userModel = void 0;
 var mongoose_1 = __importDefault(require("mongoose"));
 var crypto_1 = require("crypto");
 var userSchema = new mongoose_1.default.Schema({
-    _id: { type: String },
+    _id: { type: String, default: function () { return (0, crypto_1.randomUUID)(); } },
     username: { type: String, unique: true, required: true, validate: function (value) { return value.length >= 4 && value.length <= 16; } },
     password: { type: String, required: true, validate: function (value) { return value.length > 30; } },
 });
