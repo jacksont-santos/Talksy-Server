@@ -111,6 +111,23 @@ var RoomService = /** @class */ (function () {
             });
         });
     };
+    RoomService.prototype.getParticipantRooms = function (userId) {
+        return __awaiter(this, void 0, void 0, function () {
+            var rooms, roomIds, participantRooms;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, models_1.roomHistoryModel.find({ users: userId })];
+                    case 1:
+                        rooms = _a.sent();
+                        roomIds = rooms.map(function (room) { return room.roomId; });
+                        return [4 /*yield*/, models_1.roomModel.find({ _id: { $in: roomIds }, ownerId: { $ne: userId } }, { password: 0 })];
+                    case 2:
+                        participantRooms = _a.sent();
+                        return [2 /*return*/, { statusCode: 200, data: participantRooms.length ? participantRooms : [] }];
+                }
+            });
+        });
+    };
     RoomService.prototype.createRoom = function (ownerId_1, _a) {
         return __awaiter(this, arguments, void 0, function (ownerId, _b) {
             var newRoomData, _c, room, message, success;

@@ -41,6 +41,7 @@ var authMiddleware_1 = require("../middlewares/authMiddleware");
 var roomService_1 = require("./roomService");
 var roomValidator_1 = require("./roomValidator");
 var router = (0, express_1.Router)();
+router.use(authMiddleware_1.authMiddleware);
 var roomService = new roomService_1.RoomService();
 router.get("/", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var response;
@@ -72,7 +73,7 @@ router.get("/id/:id", function (req, res) { return __awaiter(void 0, void 0, voi
         }
     });
 }); });
-router.get("/private", authMiddleware_1.authMiddleware, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/private", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var userId, response;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -104,7 +105,23 @@ router.get("/private/:id", function (req, res) { return __awaiter(void 0, void 0
         }
     });
 }); });
-router.post("/create", [authMiddleware_1.authMiddleware, roomValidator_1.validateRoomDTO], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/participant", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var userId, response;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                userId = req.headers.userData._id;
+                return [4 /*yield*/, roomService.getParticipantRooms(userId)];
+            case 1:
+                response = _a.sent();
+                res
+                    .status(response.statusCode)
+                    .json({ message: response.message, data: response.data });
+                return [2 /*return*/];
+        }
+    });
+}); });
+router.post("/create", [roomValidator_1.validateRoomDTO], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var _a, name, maxUsers, isPublic, password, userId, response;
     return __generator(this, function (_b) {
         switch (_b.label) {
@@ -126,7 +143,7 @@ router.post("/create", [authMiddleware_1.authMiddleware, roomValidator_1.validat
         }
     });
 }); });
-router.put("/update/:id", [authMiddleware_1.authMiddleware, roomValidator_1.validateRoomDTO], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.put("/update/:id", [roomValidator_1.validateRoomDTO], function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var roomId, _a, name, maxUsers, isPublic, active, password, userId, response;
     return __generator(this, function (_b) {
         switch (_b.label) {
@@ -150,7 +167,7 @@ router.put("/update/:id", [authMiddleware_1.authMiddleware, roomValidator_1.vali
         }
     });
 }); });
-router.delete("/delete/:Id", authMiddleware_1.authMiddleware, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.delete("/delete/:Id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var roomId, userId, response;
     return __generator(this, function (_a) {
         switch (_a.label) {

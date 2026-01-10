@@ -1,4 +1,4 @@
-import { roomModel, chatModel } from "../database/models";
+import { roomModel, chatModel, roomHistoryModel } from "../database/models";
 import { httpResponse } from "../utils/response";
 import { hashPassword } from "../utils/crypto";
 import { WSService } from "../ws/wsService";
@@ -35,6 +35,13 @@ export class RoomService {
     const privateRoom = await roomModel.findOne({ _id: roomId }, { password: 0 });
     if (!privateRoom) return {statusCode: 404}
     return {statusCode: 200, data: privateRoom};
+  }
+
+  async getParticipantRooms(userId: string): Promise<httpResponse> {
+    const rooms = await roomHistoryModel.find({ users: userId });
+    const roomIds = rooms.map(room => room.roomId);
+    const participantRooms = await roomModel.find({ _id: { $in: roomIds }, ownerId: { $ne: userId } }, { password: 0 });
+    return {statusCode: 200, data: participantRooms.length ? participantRooms : []};
   }
 
   async createRoom(

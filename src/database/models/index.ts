@@ -6,7 +6,6 @@ const userSchema = new mongoose.Schema({
   username: { type: String, unique: true, required: true, validate: (value) => value.length >= 4 && value.length <= 16 },
   password: { type: String, required: true, validate: (value) => value.length > 30 },
 });
-
 const userModel = mongoose.model('user', userSchema);
 
 const roomSchema = new mongoose.Schema({
@@ -20,15 +19,22 @@ const roomSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now(), required: true },
   updatedAt: { type: Date, default: Date.now(), required: true },
 });
-
 const roomModel = mongoose.model('room', roomSchema);
+
+const roomHistorySchema = new mongoose.Schema({
+  _id: { type: String, default: () => randomUUID() },
+  roomId: { type: String, required: true },
+  users: { type: Array<String>, default: [], required: true },
+  createdAt: { type: Date, default: new Date(), required: true },
+  updatedAt: { type: Date, default: new Date(), required: true },
+});
+const roomHistoryModel = mongoose.model('roomHistory', roomHistorySchema);
 
 type Chat = {
   nickname: string;
   content: string;
   createdAt: Date;
 }
-
 const chatSchema = new mongoose.Schema({
   _id: { type: String },
   roomId: { type: String, required: true },
@@ -38,7 +44,7 @@ const chatSchema = new mongoose.Schema({
 });
 const chatModel = mongoose.model('chat', chatSchema);
 
-export { userModel, roomModel, chatModel }
+export { userModel, roomModel, roomHistoryModel, chatModel }
 
 export interface User {
   _id: string;

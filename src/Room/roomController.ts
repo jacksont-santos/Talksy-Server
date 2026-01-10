@@ -4,12 +4,12 @@ import { RoomService } from "./roomService";
 import { validateRoomDTO } from "./roomValidator";
 
 const router = Router();
+router.use(authMiddleware);
 
 const roomService = new RoomService();
 
 router.get("/", async (req: Request, res: Response) => {
   const response = await roomService.getPublicRooms();
-
   res
     .status(response.statusCode)
     .json({ message: response.message, data: response.data });
@@ -18,16 +18,14 @@ router.get("/", async (req: Request, res: Response) => {
 router.get("/id/:id", async (req: Request, res: Response) => {
   const roomId = req.params.id;
   const response = await roomService.getRoomById(roomId);
-
   res
     .status(response.statusCode)
     .json({ message: response.message, data: response.data });
 });
 
-router.get("/private", authMiddleware, async (req: Request, res: Response) => {
+router.get("/private", async (req: Request, res: Response) => {
   const userId = (<any>req.headers).userData._id;
   const response = await roomService.getPrivateRooms(userId);
-
   res
     .status(response.statusCode)
     .json({ message: response.message, data: response.data });
@@ -36,29 +34,34 @@ router.get("/private", authMiddleware, async (req: Request, res: Response) => {
 router.get("/private/:id", async (req: Request, res: Response) => {
   const roomId = req.params.id;
   const response = await roomService.getPrivateRoomById(roomId);
-
   res
     .status(response.statusCode)
     .json({ message: response.message, data: response.data });
 });
 
-router.post("/create", [authMiddleware, validateRoomDTO], async (req: Request, res: Response) => {
+router.get("/participant", async (req: Request, res: Response) => {
+  const userId = (<any>req.headers).userData._id;
+  const response = await roomService.getParticipantRooms(userId);
+  res
+    .status(response.statusCode)
+    .json({ message: response.message, data: response.data });
+});
+
+router.post("/create", [validateRoomDTO], async (req: Request, res: Response) => {
   const { name, maxUsers, isPublic, password } = req.body;
   const userId = (<any>req.headers).userData._id;
-
   const response = await roomService.createRoom(userId, {
     name,
     maxUsers,
     isPublic,
     password,
   });
-
   res
     .status(response.statusCode)
     .json({ message: response.message, data: response.data });
 });
 
-router.put("/update/:id", [authMiddleware, validateRoomDTO], async (req: Request, res: Response) => {
+router.put("/update/:id", [validateRoomDTO], async (req: Request, res: Response) => {
   const roomId = req.params.id;
   const { name, maxUsers, isPublic, active, password } = req.body;
   const userId = (<any>req.headers).userData._id;
@@ -74,11 +77,10 @@ router.put("/update/:id", [authMiddleware, validateRoomDTO], async (req: Request
     .json({ message: response.message, data: response.data });
 });
 
-router.delete("/delete/:Id", authMiddleware, async (req: Request, res: Response) => {
+router.delete("/delete/:Id", async (req: Request, res: Response) => {
   const roomId = req.params.Id;
   const userId = (<any>req.headers).userData._id;
   const response = await roomService.deleteRoom(userId, roomId);
-
   res
     .status(response.statusCode)
     .json({ message: response.message });
@@ -88,7 +90,6 @@ router.get("/messages/:id", async (req: Request, res: Response) => {
   const { id: roomId } = req.params;
   const { page, limit } = req.query;
   const response = await roomService.getRoomMessages(roomId, Number(page), Number(limit));
-
   res
     .status(response.statusCode)
     .json({ message: response.message, data: response.data });
