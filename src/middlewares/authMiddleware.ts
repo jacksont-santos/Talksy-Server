@@ -1,6 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyToken } from '../utils/jwt';
-import { AppError } from '../utils/appError';
+import { AppError } from '../utils/AppError';
+
+declare global {
+  namespace Express {
+    interface Request {
+      userId?: string;
+    }
+  }
+}
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const authorization = req.headers.authorization;

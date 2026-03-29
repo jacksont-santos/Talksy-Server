@@ -9,7 +9,7 @@ export const signJWT = (payload: object): string => {
 export const verifyToken = (token: string) => {
   try {
     const decoded = jwt.verify(token, secretKey);
-    return decoded;
+    return decoded as { username: string; _id: string; date: Date };
   } catch (error) {
     return null;
   }

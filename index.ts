@@ -1,9 +1,12 @@
 import cors from 'cors';
 import 'dotenv/config';
-import express, { Request, Response, NextFunction } from 'express';
-import { connectToDatabase } from './src/database/connection/mongo';
-import userRouter from './src/User/userController';
-import roomRouter from './src/Room/roomController';
+import express from 'express';
+import { connectMongo } from './src/Mongo/connectMongo';
+
+import { errorHandler } from './src/middlewares/errorHandler';
+import userRouter from './src/User/Routes/routes';
+import roomRouter from './src/Room/Routes/routes';
+import authRouter from './src/Auth/Routes/routes';
 
 const app = express();
 
@@ -25,6 +28,7 @@ app.get('/health', (req, res) => {
   res.send('ok');
 });
 
+app.use('/auth', authRouter);
 app.use('/user', userRouter);
 app.use('/room', roomRouter);
 
@@ -34,13 +38,7 @@ app.listen(port, () => {
 });
 
 (async () => {
-  await connectToDatabase();
+  await connectMongo();
 })();
 
-interface CustomError extends Error {
-  statusCode?: number;
-}
-
-app.use((err: CustomError, req: Request, res: Response, next: NextFunction) => {
-  res.status(err.statusCode || 500).json({message: err.message});
-});
+app.use(errorHandler);

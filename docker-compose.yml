@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  app:
+    image: dev.chat-manager:latest
+    container_name: dev.chat-manager
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PORT: ${PORT}
+
+    ports:
+      - "${PORT}:${PORT}"
+
+    env_file:
+      - .env
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+ 

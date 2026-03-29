@@ -1,12 +1,14 @@
 {
   "name": "chat-manager-api",
   "description": "Simple api sample in Node",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --ignore-watch node_modules ./index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "docker:prebuild": "rm -rf dist",
+    "docker:build": "npm run docker:prebuild && tsc"
   },
   "author": "Google LLC",
   "license": "Apache-2.0",

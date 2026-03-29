@@ -42,9 +42,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var cors_1 = __importDefault(require("cors"));
 require("dotenv/config");
 var express_1 = __importDefault(require("express"));
-var mongo_1 = require("./src/database/connection/mongo");
-var userController_1 = __importDefault(require("./src/User/userController"));
-var roomController_1 = __importDefault(require("./src/Room/roomController"));
+var connectMongo_1 = require("./src/Mongo/connectMongo");
+var errorHandler_1 = require("./src/middlewares/errorHandler");
+var routes_1 = __importDefault(require("./src/User/Routes/routes"));
+var routes_2 = __importDefault(require("./src/Room/Routes/routes"));
+var routes_3 = __importDefault(require("./src/Auth/Routes/routes"));
 var app = (0, express_1.default)();
 var environment = process.env.ENVIRONMENT || 'development';
 var corsOptions = {
@@ -62,8 +64,9 @@ app.use(express_1.default.json());
 app.get('/health', function (req, res) {
     res.send('ok');
 });
-app.use('/user', userController_1.default);
-app.use('/room', roomController_1.default);
+app.use('/auth', routes_3.default);
+app.use('/user', routes_1.default);
+app.use('/room', routes_2.default);
 var port = process.env.PORT || 3000;
 app.listen(port, function () {
     console.log("listening on port ".concat(port));
@@ -71,14 +74,12 @@ app.listen(port, function () {
 (function () { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, (0, mongo_1.connectToDatabase)()];
+            case 0: return [4 /*yield*/, (0, connectMongo_1.connectMongo)()];
             case 1:
                 _a.sent();
                 return [2 /*return*/];
         }
     });
 }); })();
-app.use(function (err, req, res, next) {
-    res.status(err.statusCode || 500).json({ message: err.message });
-});
+app.use(errorHandler_1.errorHandler);
 //# sourceMappingURL=index.js.map
