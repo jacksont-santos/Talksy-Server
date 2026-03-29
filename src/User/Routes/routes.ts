@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { validateUserDTO } from "../Validators/UserValidator";
-import { bindController } from "../../Utils/bindController";
-import { authMiddleware } from "../../Middlewares/authMiddleware";
+import { bindController } from "../../utils/bindController";
+import { authMiddleware } from "../../middlewares/authMiddleware";
 import { UserController } from "../Controller/UserController";
 
 const router = Router();

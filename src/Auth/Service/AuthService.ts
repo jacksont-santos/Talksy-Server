@@ -1,6 +1,6 @@
 import { UserRepository } from "../../User/Repository/UserRepository";
-import { comparePasswords } from "../../Utils/crypto";
-import { signJWT } from "../../Utils/jwt";
+import { comparePasswords } from "../../utils/crypto";
+import { signJWT } from "../../utils/jwt";
 import { IUser } from "../../User/Entity/User";
 import { AppError } from "../../Error/AppError";
 

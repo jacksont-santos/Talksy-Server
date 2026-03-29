@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { bindController } from "../../Utils/bindController";
-import { authMiddleware } from "../../Middlewares/authMiddleware";
+import { bindController } from "../../utils/bindController";
+import { authMiddleware } from "../../middlewares/authMiddleware";
 import { validateRoomDTO } from "../Validators/RoomValidator";
 import { RoomController } from "../Controller/RoomController";
 

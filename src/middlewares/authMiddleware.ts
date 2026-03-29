@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { verifyToken } from '../Utils/jwt';
+import { verifyToken } from '../utils/jwt';
 import { AppError } from '../Error/AppError';
 
 declare global {

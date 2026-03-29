@@ -1,5 +1,5 @@
 import { UserRepository } from "../Repository/UserRepository";
-import { hashPassword } from "../../Utils/crypto";
+import { hashPassword } from "../../utils/crypto";
 import { IUser } from "../Entity/User";
 import { AppError } from "../../Error/AppError";
 

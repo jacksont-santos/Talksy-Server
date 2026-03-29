@@ -1,10 +1,10 @@
-import { hashPassword } from "../../Utils/crypto";
+import { hashPassword } from "../../utils/crypto";
 import { WSService } from "../../ws/wsService";
 import { IRoom } from "../Entity/Room";
 import { RoomRepository } from "../Repository/RoomRepository";
 import { ChatRepository } from "../../Chat/Repository/ChatRepository";
 import { AppError } from "../../Error/AppError";
-import { verifyToken } from "../../Utils/jwt";
+import { verifyToken } from "../../utils/jwt";
 
 interface createRoomDTO {
   name: string;
