@@ -1,7 +1,7 @@
 import { UserRepository } from "../Repository/UserRepository";
-import { hashPassword } from "../../utils/crypto";
+import { hashPassword } from "../../Utils/crypto";
 import { IUser } from "../Entity/User";
-import { AppError } from "../../utils/AppError";
+import { AppError } from "../../Error/AppError";
 
 export class UserService {
   private userRepository: UserRepository;

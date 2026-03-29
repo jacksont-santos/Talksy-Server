@@ -3,7 +3,7 @@ import 'dotenv/config';
 import express from 'express';
 import { connectMongo } from './src/Mongo/connectMongo';
 
-import { errorHandler } from './src/middlewares/errorHandler';
+import { errorHandler } from './src/Middlewares/errorHandler';
 import userRouter from './src/User/Routes/routes';
 import roomRouter from './src/Room/Routes/routes';
 import authRouter from './src/Auth/Routes/routes';

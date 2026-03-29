@@ -1,8 +1,8 @@
 import { UserRepository } from "../../User/Repository/UserRepository";
-import { comparePasswords } from "../../utils/crypto";
-import { signJWT } from "../../utils/jwt";
+import { comparePasswords } from "../../Utils/crypto";
+import { signJWT } from "../../Utils/jwt";
 import { IUser } from "../../User/Entity/User";
-import { AppError } from "../../utils/AppError";
+import { AppError } from "../../Error/AppError";
 
 export class AuthService {
   private userRepository: UserRepository;

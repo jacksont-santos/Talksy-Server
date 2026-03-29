@@ -1,6 +1,6 @@
 import { ZodSchema, z } from "zod";
 import { Request, Response, NextFunction } from "express";
-import { AppError } from '../../utils/AppError';
+import { AppError } from '../../Error/AppError';
 
 const AuthDTO: ZodSchema = z.object({
   username: z.string().min(4, "too short").max(20, "too long"),

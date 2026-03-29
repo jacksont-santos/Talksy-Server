@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { bindController } from "../../utils/bindController";
+import { bindController } from "../../Utils/bindController";
 import { AuthController } from "../Controller/AuthController";
 import { validateAuthDTO } from "../Validator/AuthValidator";
 

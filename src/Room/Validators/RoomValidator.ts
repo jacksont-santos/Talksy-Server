@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { AppError } from '../../utils/AppError';
+import { AppError } from '../../Error/AppError';
 import { createRoomDTO } from "./CreateRoom.dto";
 import { updateRoomDTO } from "./UpdateRoom.dto";
 
