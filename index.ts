@@ -25,7 +25,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 app.get('/health', (req, res) => {
-  res.send('ok');
+  res.send('manager ok');
 });
 
 app.use('/auth', authRouter);
