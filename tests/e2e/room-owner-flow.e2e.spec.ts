@@ -3,7 +3,7 @@ import { signupAndSignin } from '../helpers/auth';
 import { clearTestDatabase, connectTestDatabase, disconnectTestDatabase } from '../helpers/mongo-memory';
 
 describe('Room owner flow E2E', () => {
-  let app;
+  let app: any;
 
   beforeAll(async () => {
     process.env.SECRET_KEY = 'e2e-secret-key';
