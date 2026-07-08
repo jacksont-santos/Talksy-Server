@@ -7,7 +7,7 @@ interface rawMessage {
 } 
 
 export class WSService {
-  private socket: WebSocket;
+  private socket: WebSocket | null = null;
 
   constructor() {
     this.connect();
@@ -15,6 +15,11 @@ export class WSService {
 
   private connect() {
     console.log("WSService connect");
+    if (!process.env.CHATSERVER_URL) {
+      console.warn("CHATSERVER_URL is not defined. WebSocket integration is disabled.");
+      return;
+    }
+
     this.socket = new WebSocket(process.env.CHATSERVER_URL);
 
     this.socket.addEventListener("open", (event) => {
